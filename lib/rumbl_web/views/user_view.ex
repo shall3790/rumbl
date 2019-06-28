@@ -1,4 +1,4 @@
-defmodule Rumbl.UserView do
+defmodule RumblWeb.UserView do
   use RumblWeb, :view
   alias Rumbl.User
 
