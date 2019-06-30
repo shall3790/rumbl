@@ -27,6 +27,7 @@ defmodule Rumbl.User do
     model
       |> changeset(params)
       |> cast(params, [:password])
+      |> validate_required(:password)
       |> validate_length(:password, min: 6, max: 100)
       |> put_pass_hash()
   end
