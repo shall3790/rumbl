@@ -3,6 +3,17 @@ defmodule RumblWeb.UserController do
   alias Rumbl.Repo
   alias Rumbl.User
 
+  defp authenticate(conn) do
+    if conn.assigns.current_user do
+      conn
+    else
+      conn
+      |> put_flash(:error , "You must be logged in to access that page")
+      |> redirect(to: Routes.page_path(conn, :index))
+      |> halt()
+    end
+  end
+
   def create(conn, %{ "user" => user_params}) do
     # changeset = User.changeset(%User{}, user_params)
     changeset = User.registration_changeset(%User{}, user_params)
