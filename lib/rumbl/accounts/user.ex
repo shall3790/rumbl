@@ -2,7 +2,10 @@ defmodule Rumbl.User do
   use Ecto.Schema
   require Logger
   import Ecto.Changeset
+  import Phoenix.Controller
+
   # defstruct [:id, :name, :username, :password]
+
   schema "users" do
     field :name , :string
     field :username , :string
@@ -21,6 +24,19 @@ defmodule Rumbl.User do
     cs |> inspect() |> Logger.debug()
     cs
 
+  end
+
+  def create(conn, %{"user" => user_params}) do
+    changeset = User.registration_changeset(%Rumbl.User{}, user_params)
+    case Repo.insert(changeset) do
+      {:ok ,user} ->
+        conn
+        |> Rumbl.Auth.login(user)
+        |> put_flash(:info, "#{ user.name } created!" )
+        |> redirect(to: Routes.user_path(conn, :index))
+      {:error, changeset} ->
+        render(conn, "new.html", changeset: changeset)
+    end
   end
 
   def registration_changeset(model, params) do
