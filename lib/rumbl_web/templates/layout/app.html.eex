@@ -5,9 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Rumbl · Phoenix Framework</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
   </head>
   <body>
+  <!-- 
     <header>
       <section>
         <nav>
@@ -24,6 +26,7 @@
         </nav>
       </section>
     </header>
+    
     <header>
       <section class="container">
         <nav role="navigation">
@@ -39,6 +42,33 @@
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
       <%= render @view_module, @view_template, assigns %>
     </main>
+    -->
+      <div class="container">
+      <header class="header">
+        <ol class="breadcrumb text-right">
+          <%= if @current_user do %>
+            <li><%= @current_user.username %></li>
+            <li><%= link "My Videos", to: Routes.video_path(@conn, :index) %></li>
+            <li><%= link "Log out", to: Routes.session_path(@conn, :delete, @current_user), method: "delete" %></li>
+          <% else %>
+            <li><%= link "Register", to: Routes.user_path(@conn, :new) %></li>
+            <li><%= link "Log In", to: Routes.session_path(@conn, :new) %></li>
+          <% end %>
+        </ol>
+        <a href="/" class="phx-logo">
+          <img src="<%= Routes.static_path(@conn, "/images/phoenix.png") %>" alt="Phoenix Framework Logo"/>
+        </a>
+      </header>
+
+      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+
+      <main role="main">
+        <%= render @view_module, @view_template, assigns %>
+      </main>
+
+    </div> <!-- /container -->
+    <script>window.userToken = "<%= assigns[:user_token] %>"</script>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
